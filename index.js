@@ -4,8 +4,7 @@ const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require("body-parser")
 
-
-const movieRoutes = require("./route/movieRoute");
+const apiRoutes = require("./servers/apiRoutes");
 
 const server = express();
 server.use(morgan("dev")); // middleware
@@ -14,7 +13,7 @@ server.use(bodyParser.json()); // parse json in req.body
 server.get("/", (req, res, next) => { // Health check API
     return res.send("Server is running.");
 });
-server.use("/movie", movieRoutes);
+server.use('/api', apiRoutes());
 
 
 server.listen(9000);
