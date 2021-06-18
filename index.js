@@ -1,35 +1,45 @@
 const { Sequelize } = require('sequelize');
-const { Movie } = require("./model");
-const connectToDatabase = async () => {
-    // Option 2: Passing parameters separately (other dialects)
-    // const sequelize = new Sequelize('database', 'username', 'password',
-    const sequelize = new Sequelize('postgres', 'postgres', 'postgres', {
-        host: 'localhost',
-        dialect: 'postgres'
 
-    });
-    try {
-        await sequelize.authenticate();
-        console.log('Connection has been established successfully.');
-    } catch (error) {
-        console.error('Unable to connect to the database:', error);
-    }
-}
+const express = require("express");
+const morgan = require("morgan");
+const bodyParser = require("body-parser")
 
-//connectToDatabase();
-const createNewMovie = async () => {
-    const movieRecord = {
-        movieId: 'MV-0098339',
-        title: 'Infinity war',
-        actors: 'Erick',
-        genre: 'action,sci-fi,time',
-        year: 2020,
-        length: 150
-    }
 
-    const result = await Movie.create(movieRecord);
+const movieRoutes = require("./route/movieRoute");
 
-    console.log(result.toJSON());
-}
+const server = express();
+server.use(morgan("dev")); // middleware
+server.use(bodyParser.json()); // parse json in req.body
 
-createNewMovie();
+server.get("/", (req, res, next) => { // Health check API
+    return res.send("Server is running.");
+});
+server.use("/movie", movieRoutes);
+
+
+server.listen(9000);
+
+
+
+
+
+
+
+
+
+
+
+// const connectToDatabase = async () => {
+//     const sequelize = new Sequelize('postgres', 'postgres', 'postgres', {
+//         host: 'localhost',
+//         dialect: 'postgres'
+
+//     });
+//     try {
+//         await sequelize.authenticate();
+//         console.log('Connection has been established successfully.');
+//     } catch (error) {
+//         console.error('Unable to connect to the database:', error);
+//     }
+// }
+// connectToDatabase();
